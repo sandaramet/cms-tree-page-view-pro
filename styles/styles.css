@@ -35,6 +35,7 @@ Don't use this anymore since it's against the repository guidelines
 
 #wpbody-content .cms_tpv_container {
     margin-right: 250px;
+    width: 100%;
 }
 
 #dashboard-widgets-wrap .cms_tpv_container {

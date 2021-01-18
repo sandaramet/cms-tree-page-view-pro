@@ -179,7 +179,7 @@ jQuery(function($) {
         height2 = "18",
         ins_height = "20";
     css_string = '' +
-        '.jstree ul, .jstree li { display:block; margin:0 0 0 0; padding:0 0 0 0; list-style-type:none;max-height: 300px;overflow: auto; } ' +
+        '.jstree ul, .jstree li { display:block; margin:0 0 0 0; padding:0 0 0 0; list-style-type:none;max-height: 300px;overflow-x: auto; } ' +
         '.jstree li { display:block; min-height:' + height + 'px; line-height:' + height + 'px; white-space:nowrap; margin-left:18px; min-width:18px; } ' +
         '.jstree-rtl li { margin-left:0; margin-right:18px; } ' +
         '.jstree > ul > li { margin-left:0px; } ' +
