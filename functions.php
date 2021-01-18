@@ -1210,7 +1210,9 @@ function cms_tpv_pages_page() {
 			'_builtin' => false
 		));
 		foreach ($custom_post_types as $c_post_type) {
+			if($c_post_type !== 'elementor_library' || $c_post_type !== 'es_template'){
 			cms_tpv_print_common_tree_stuff($c_post_type);
+			}
 		}
 		?>
 
