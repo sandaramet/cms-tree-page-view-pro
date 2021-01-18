@@ -1051,47 +1051,9 @@ function cms_tpv_print_common_tree_stuff($post_type = "") {
 		if (true) {
 
 			// start the party!
-
+			
 			?>
-			<ul class="cms-tpv-subsubsub cms-tpv-subsubsub-select-view">
-				<li class="cms_tvp_view_is_status_view">
-					<a class="cms_tvp_view_all  <?php echo ($cms_tpv_view=="all") ? "current" : "" ?>" href="#" <?php echo $status_data_attributes["all"] ?>>
-						<?php _e("All", 'cms-tree-page-view') ?>
-						<span class="count">(<?php echo $post_count_all ?>)</span>
-					</a> |</li>
-				<li class="cms_tvp_view_is_status_view">
-					<a class="cms_tvp_view_public <?php echo ($cms_tpv_view=="public") ? "current" : "" ?>" href="#" <?php echo $status_data_attributes["publish"] ?>>
-						<?php _e("Public", 'cms-tree-page-view') ?>
-						<span class="count">(<?php echo $post_count_publish ?>)</span>
-					</a> |</li>
-				<li class="cms_tvp_view_is_status_view">
-					<a class="cms_tvp_view_trash <?php echo ($cms_tpv_view=="trash") ? "current" : "" ?>" href="#" <?php echo $status_data_attributes["trash"] ?>>
-						<?php _e("Trash", 'cms-tree-page-view') ?>
-						<span class="count">(<?php echo $post_count_trash ?>)</span>
-					</a>
-				</li>
-
-				<?php
-				if (cms_tpv_is_post_type_hierarchical($post_type_object)) {
-					?>
-					<li><a href="#" class="cms_tpv_open_all"><?php _e("Expand", 'cms-tree-page-view') ?></a> |</li>
-					<li><a href="#" class="cms_tpv_close_all"><?php _e("Collapse", 'cms-tree-page-view') ?></a></li>
-					<?php
-				}
-				?>
-
-				<li>
-					<form class="cms_tree_view_search_form" method="get" action="">
-						<input type="text" name="search" class="cms_tree_view_search" />
-						<a title="<?php _e("Clear search", 'cms-tree-page-view') ?>" class="cms_tree_view_search_form_reset" href="#">x</a>
-						<input type="submit" class="cms_tree_view_search_submit button button-small" value="<?php _e("Search", 'cms-tree-page-view') ?>" />
-						<span class="cms_tree_view_search_form_working"><?php _e("Searching...", 'cms-tree-page-view') ?></span>
-						<span class="cms_tree_view_search_form_no_hits"><?php _e("Nothing found.", 'cms-tree-page-view') ?></span>
-					</form>
-				</li>
-
-			</ul>
-
+			<h3><?php echo $post_type ?></h3>
 			<div class="cms_tpv_working">
 				<?php _e("Loading...", 'cms-tree-page-view') ?>
 			</div>
@@ -1241,7 +1203,15 @@ function cms_tpv_pages_page() {
 		?></h2>
 
 		<?php
+		// show_tool_bar();
 		cms_tpv_print_common_tree_stuff($post_type);
+		$custom_post_types = get_post_types(array(
+			'public'   => true,
+			'_builtin' => false
+		));
+		foreach ($custom_post_types as $c_post_type) {
+			cms_tpv_print_common_tree_stuff($c_post_type);
+		}
 		?>
 
 	</div>
@@ -1980,3 +1950,96 @@ function cms_tpv_get_the_modified_author() {
 		}
 	}
 }
+function show_tool_bar(){ ?>
+		<?php
+			$post_type = 'birds';
+			$post_type_object = get_post_type_object($post_type);
+			$get_pages_args = array("post_type" => $post_type);
+		
+			$pages = cms_tpv_get_pages($get_pages_args);
+		
+			// check if wpml is active and if this post type is one of its enabled ones
+			$wpml_current_lang = "";
+			$wmpl_active_for_post = FALSE;
+			if (defined("ICL_SITEPRESS_VERSION")) {
+		
+				$wpml_post_types = $sitepress->get_translatable_documents();
+				if (array_key_exists($post_type, $wpml_post_types)) {
+					$wmpl_active_for_post = TRUE;
+					$wpml_current_lang = $sitepress->get_current_language();
+				}
+		
+			}
+		
+			$status_data_attributes = array("all" => "", "publish" => "", "trash" => "");
+		
+			// Calculate post counts
+			if ($wpml_current_lang) {
+		
+				// Count code for WPML, mostly taken/inspired from  WPML Multilingual CMS, sitepress.class.php
+				$langs = array();
+		
+				$wpml_post_counts = cms_tpv_get_wpml_post_counts($post_type);
+		
+				$post_count_all = (int) @$wpml_post_counts["private"][$wpml_current_lang] + (int) @$wpml_post_counts["future"][$wpml_current_lang] + (int) @$wpml_post_counts["publish"][$wpml_current_lang] + (int) @$wpml_post_counts["draft"][$wpml_current_lang];
+				$post_count_publish	= (int) @$wpml_post_counts["publish"][$wpml_current_lang];
+				$post_count_trash	= (int) @$wpml_post_counts["trash"][$wpml_current_lang];
+		
+				foreach ($wpml_post_counts["publish"] as $one_wpml_lang => $one_wpml_lang_count) {
+					if ("all" === $one_wpml_lang) continue;
+					$lang_post_count_all 		= (int) @$wpml_post_counts["publish"][$one_wpml_lang] + (int) @$wpml_post_counts["draft"][$one_wpml_lang];
+					$lang_post_count_publish	= (int) @$wpml_post_counts["publish"][$one_wpml_lang];
+					$lang_post_count_trash		= (int) @$wpml_post_counts["trash"][$one_wpml_lang];
+					$status_data_attributes["all"] 		.= " data-post-count-{$one_wpml_lang}='{$lang_post_count_all}' ";
+					$status_data_attributes["publish"] 	.= " data-post-count-{$one_wpml_lang}='{$lang_post_count_publish}' ";
+					$status_data_attributes["trash"] 	.= " data-post-count-{$one_wpml_lang}='{$lang_post_count_trash}' ";
+				}
+		
+			} else {
+				$post_count = wp_count_posts($post_type);
+				$post_count_all = $post_count->publish + $post_count->future + $post_count->draft + $post_count->pending + $post_count->private;
+				$post_count_publish = $post_count->publish;
+				$post_count_trash = $post_count->trash;
+			}
+		
+		
+		?>
+		<ul class="cms-tpv-subsubsub cms-tpv-subsubsub-select-view">
+			<li class="cms_tvp_view_is_status_view">
+				<a class="cms_tvp_view_all  <?php echo ($cms_tpv_view == "all") ? "current" : "" ?>" href="#" <?php echo $status_data_attributes["all"] ?>>
+					<?php _e("All", 'cms-tree-page-view') ?>
+					<span class="count">(<?php echo $post_count_all ?>)</span>
+				</a> |</li>
+			<li class="cms_tvp_view_is_status_view">
+				<a class="cms_tvp_view_public <?php echo ($cms_tpv_view == "public") ? "current" : "" ?>" href="#" <?php echo $status_data_attributes["publish"] ?>>
+					<?php _e("Public", 'cms-tree-page-view') ?>
+					<span class="count">(<?php echo $post_count_publish ?>)</span>
+				</a> |</li>
+			<li class="cms_tvp_view_is_status_view">
+				<a class="cms_tvp_view_trash <?php echo ($cms_tpv_view == "trash") ? "current" : "" ?>" href="#" <?php echo $status_data_attributes["trash"] ?>>
+					<?php _e("Trash", 'cms-tree-page-view') ?>
+					<span class="count">(<?php echo $post_count_trash ?>)</span>
+				</a>
+			</li>
+
+			<?php
+			if (cms_tpv_is_post_type_hierarchical($post_type_object)) {
+			?>
+				<li><a href="#" class="cms_tpv_open_all"><?php _e("Expand", 'cms-tree-page-view') ?></a> |</li>
+				<li><a href="#" class="cms_tpv_close_all"><?php _e("Collapse", 'cms-tree-page-view') ?></a></li>
+			<?php
+			}
+			?>
+
+			<li>
+				<form class="cms_tree_view_search_form" method="get" action="">
+					<input type="text" name="search" class="cms_tree_view_search" />
+					<a title="<?php _e("Clear search", 'cms-tree-page-view') ?>" class="cms_tree_view_search_form_reset" href="#">x</a>
+					<input type="submit" class="cms_tree_view_search_submit button button-small" value="<?php _e("Search", 'cms-tree-page-view') ?>" />
+					<span class="cms_tree_view_search_form_working"><?php _e("Searching...", 'cms-tree-page-view') ?></span>
+					<span class="cms_tree_view_search_form_no_hits"><?php _e("Nothing found.", 'cms-tree-page-view') ?></span>
+				</form>
+			</li>
+
+		</ul>
+<?php } ?>
