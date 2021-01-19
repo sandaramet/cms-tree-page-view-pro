@@ -2049,3 +2049,38 @@ function cms_tpv_print_childs($pageID, $view = "all", $arrOpenChilds = null, $po
 
 </ul>
 <?php } ?>
+<?php 
+function custom_node_example($wp_admin_bar){
+    $args = array(
+        'id' => 'tree-view',
+		'title' => '
+		<div id="tree-view">Tree View</div>
+		<style>
+		#tree-view{
+			font-weight: bold;
+			background-color: green;
+			padding: 0px 12px;
+			letter-spacing: 1px;
+			color:white ;
+			transition: 0.3s;
+		}
+		#tree-view:hover {
+			color:white !important;
+			background-color: #236623;
+		}
+		#wp-admin-bar-tree-view a:hover{
+			background-color:unset !important;
+
+		}
+		</style>',
+        'href' => '/wp-admin/edit.php?post_type=page&page=cms-tpv-page-page',
+        'meta' => array(
+            'class' => 'tree-view'
+        )
+    );
+    $wp_admin_bar->add_node($args);
+}
+
+add_action('admin_bar_menu', 'custom_node_example', 80);
+?>
+<?php?>
