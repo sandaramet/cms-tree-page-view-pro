@@ -1049,10 +1049,33 @@ function cms_tpv_print_common_tree_stuff($post_type = "")
 
 		?>
 			<?php
+			$label = "";
 			$post_type_obj = get_post_type_object($post_type);
+			if($post_type_obj->labels->name == 'Pages') {
+				$label = 'Tree';
+				echo "<h3 class='tree'>$label</h3>";
+			}
+			else{
+				$label = 'Block ' . $post_type_obj->labels->name;  
+				echo "<h3 class='tree_db'>$label</h3>";
 
+			};
 			?>
-			<h3><?php echo $post_type_obj->labels->name;  ?></h3>
+			<!-- <h3><?php //echo $label;  ?></h3> -->
+			<style>
+				.tree{
+					background-color: green;
+					color: white;
+					width: max-content;
+					padding: 2px 15px;
+				}
+				.tree_db{
+					background-color: blue;
+					color: white;
+					width: max-content;
+					padding: 2px 15px;
+				}
+			</style>
 			<div class="cms_tpv_working">
 				<?php _e("Loading...", 'cms-tree-page-view') ?>
 			</div>
