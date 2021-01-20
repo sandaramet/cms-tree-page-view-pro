@@ -2106,4 +2106,3 @@ function custom_node_example($wp_admin_bar){
 
 add_action('admin_bar_menu', 'custom_node_example', 80);
 ?>
-<?php?>
