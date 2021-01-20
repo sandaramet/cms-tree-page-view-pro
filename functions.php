@@ -1101,8 +1101,8 @@ function cms_tpv_print_common_tree_stuff($post_type = "")
 				<h4 class="cms_tpv_page_actions_headline"></h4>
 
 				<p class="cms_tpv_action_edit_and_view">
-					<a href="#" title='<?php _e("Edit page", "cms-tree-page-view") ?>' class='cms_tpv_action_edit'><?php _e("Edit", "cms-tree-page-view") ?></a>
-					<a href="#" title='<?php _e("View page", "cms-tree-page-view") ?>' class='cms_tpv_action_view'><?php _e("View", "cms-tree-page-view") ?></a>
+					<a href="#" target="_blank" title='<?php _e("Edit page", "cms-tree-page-view") ?>' class='cms_tpv_action_edit'><?php _e("Edit", "cms-tree-page-view") ?></a>
+					<a href="#" target="_blank" title='<?php _e("View page", "cms-tree-page-view") ?>' class='cms_tpv_action_view'><?php _e("View", "cms-tree-page-view") ?></a>
 				</p>
 
 				<!-- links to add page -->
